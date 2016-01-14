@@ -6,6 +6,7 @@ export var Move_speed= 500
 export var Player_acceleration= 5
 
 var feet= null
+var feet2=null
 var anim= null
 var current_pos= 0
 var act_linear_velocity
@@ -16,7 +17,9 @@ func _ready():
 	# Initialization here
 	set_contact_monitor(true)
 	feet=get_node("RayCast2D")
+	feet2= get_node("RayCast2D1")
 	feet.add_exception(self)
+	feet2.add_exception(self)
 	anim=get_node("AnimationPlayer")
 	set_fixed_process(true)
 	
@@ -33,7 +36,7 @@ func _fixed_process(delta):
 	
 	 
 func jump():	
-	if  act_linear_velocity==0 && feet.is_colliding():
+	if  act_linear_velocity==0 &&( feet.is_colliding() or feet2.is_colliding() ):
 		set_linear_velocity(Vector2(0,-Jump_heigth))
 		anim.play("jump")	 
 		
