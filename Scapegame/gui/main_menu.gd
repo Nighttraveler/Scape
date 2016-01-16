@@ -21,3 +21,8 @@ func _on_MenuButton_pressed():
 	queue_free()
 	
 	pass # replace with function body
+
+
+func _on_exit_pressed():
+	get_tree().quit()
+	pass # replace with function body
