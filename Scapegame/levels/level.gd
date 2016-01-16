@@ -1,5 +1,5 @@
   
-extends Node2D
+extends Node
 
 var player= null
 var plataforms=null
@@ -41,7 +41,7 @@ func spawn_plataform(delta):
 	if player.get_pos().y<=last_plataform_ypos+200:
 		cantidad_plataformas=0
 		generate_random_p(delta)
-		print(plataforms.get_child_count())		
+		#print(plataforms.get_child_count())		
  
 func delete_p():
 	for i in plataforms.get_children():
