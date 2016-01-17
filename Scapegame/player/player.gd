@@ -10,8 +10,8 @@ var feet2=null
 var anim= null
 var current_pos= 0
 var act_linear_velocity
+var global
 
- 
 
 func _ready():
 	# Initialization here
@@ -22,7 +22,7 @@ func _ready():
 	feet2.add_exception(self)
 	anim=get_node("AnimationPlayer")
 	set_fixed_process(true)
-	
+	global=get_node("/root/Global")
 	pass
 
 
@@ -39,7 +39,7 @@ func jump():
 	if  act_linear_velocity==0 &&( feet.is_colliding() or feet2.is_colliding() ):
 		set_linear_velocity(Vector2(0,-Jump_heigth))
 		anim.play("jump")	 
-		
+		global.set_score()
 	 
 	pass
 

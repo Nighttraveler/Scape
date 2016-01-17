@@ -3,7 +3,10 @@ extends Node
 
 var player= null
 var plataforms=null
+var show_score= null
+var global= null
 var plataform= load("res://gameObjects/plataforms.scn")
+
 
 var cantidad_plataformas=0
 var first=true
@@ -26,12 +29,15 @@ func _ready():
 	# Initialization here
 	randomize()
 	plataforms= get_node("plataforms")
-	player=get_node("player")	 
+	player=get_node("player")
+	show_score= get_node("Ui/Label")
+	global= get_node("/root/Global")	 
 	set_process(true)	
 	pass
 
 func _process(delta):
-	spawn_plataform(delta)	 
+	spawn_plataform(delta)
+	show_score.set_text(str(global.get_score()))
 	pass
 	
 func spawn_plataform(delta):
@@ -50,4 +56,14 @@ func delete_p():
 
 func _on_Timer_delete_p_timeout():
 	delete_p()
+	pass # replace with function body
+
+
+func _on_Button_pressed():
+	var game
+	var g= load("res://gui/main_menu.scn")
+	game = g.instance()
+	
+	get_tree().get_root().add_child(game)
+	queue_free()
 	pass # replace with function body

@@ -4,6 +4,7 @@ extends VBoxContainer
 # member variables here, example:
 # var a=2
 # var b="textvar"
+
 var game
 func _ready():
 	# Initialization here
@@ -18,7 +19,7 @@ func _on_MenuButton_pressed():
 	game = g.instance()
 	
 	get_tree().get_root().add_child(game)
-	queue_free()
+	get_parent().queue_free()
 	
 	pass # replace with function body
 
