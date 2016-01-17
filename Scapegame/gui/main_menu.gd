@@ -1,13 +1,23 @@
 
 extends VBoxContainer
 
-# member variables here, example:
-# var a=2
-# var b="textvar"
 
+var high_score_label=null
 var game
+var global=null
+var savegame= File.new()
+
 func _ready():
 	# Initialization here
+	high_score_label= get_parent().get_node("highscore")
+	global=get_node("/root/Global")
+	
+	#GET THE HIGH SCORE FROM THE FILE
+	savegame.open(global.save_path,File.READ)	
+	var savedata= savegame.get_var()	
+	savegame.close()
+	
+	high_score_label.set_text("High Score "+str(savedata["highscore"]) )
 	pass
 
 

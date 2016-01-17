@@ -38,6 +38,7 @@ func _ready():
 func _process(delta):
 	spawn_plataform(delta)
 	show_score.set_text(str(global.get_score()))
+	
 	pass
 	
 func spawn_plataform(delta):
@@ -60,6 +61,7 @@ func _on_Timer_delete_p_timeout():
 
 
 func _on_Button_pressed():
+	global.save_highscore()
 	var game
 	var g= load("res://gui/main_menu.scn")
 	game = g.instance()
