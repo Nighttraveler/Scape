@@ -43,7 +43,7 @@ func _ready():
 	pass
 func losepoint_set_pos(pos):
 	if player.get_linear_velocity().y<=0:
-		losepoint.set_pos(Vector2(200,pos+700))
+		losepoint.set_pos(Vector2(200,pos+1000))
 	
 	
 func _process(delta):
@@ -86,7 +86,7 @@ func _on_Button_pressed():
 func _on_losepoint_body_enter( body ):
 	if body.get_name()=="player":
 		lose_label.show()
-		player.set_axis_velocity(Vector2(0,-700))
+		player.set_axis_velocity(Vector2(0,-800))
 		player.anim.play("lose")
 		
 		timer_for_lose.start()
