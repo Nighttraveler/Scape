@@ -3,9 +3,9 @@ extends Node
 #FILE
 var savegame= File.new()
 
-
 var score=0
-var save_path= "user://savegame.bin" 
+var save_path= "user://savegame.bin"
+var current_scene= null 
 
 #BY NOW JUST SAVE THE HIGH SCORE
 var save_data= {"highscore":score}
@@ -14,7 +14,30 @@ var save_data= {"highscore":score}
 func _ready():
 	# Initialization here
 	check_savegame()
+	
+	var root= get_tree().get_root()
+	current_scene= root.get_child( root.get_child_count()-1 )
+	
 	pass
+
+func goto_scene(path):
+	
+	call_deferred("_deferred_goto_scene",path)
+	
+	pass
+
+func _deferred_goto_scene(path):
+	
+	current_scene.free()
+		
+	var s= ResourceLoader.load(path)
+	current_scene= s.instance()
+	
+	get_tree().get_root().add_child(current_scene)
+	
+	get_tree().set_current_scene(current_scene)
+	
+	pass	
 	
 	
 func check_savegame():

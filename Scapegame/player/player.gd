@@ -39,7 +39,7 @@ func jump():
 	if  act_linear_velocity==0 &&( feet.is_colliding() or feet2.is_colliding() ):
 		set_linear_velocity(Vector2(0,-Jump_heigth))
 		anim.play("jump")	 
-		global.set_score()
+		
 	 
 	pass
 

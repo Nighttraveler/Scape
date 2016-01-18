@@ -25,13 +25,8 @@ func _ready():
 
 func _on_MenuButton_pressed():
 	
-	var g= load("res://levels/level01.scn")
-	game = g.instance()
-	
-	get_tree().get_root().add_child(game)
-	get_parent().queue_free()
-	
-	pass # replace with function body
+	global.goto_scene("res://levels/level01.scn")	
+	pass 
 
 
 func _on_exit_pressed():
