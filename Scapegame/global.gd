@@ -28,13 +28,10 @@ func goto_scene(path):
 
 func _deferred_goto_scene(path):
 	
-	current_scene.free()
-		
+	current_scene.free()		
 	var s= ResourceLoader.load(path)
-	current_scene= s.instance()
-	
-	get_tree().get_root().add_child(current_scene)
-	
+	current_scene= s.instance()	
+	get_tree().get_root().add_child(current_scene)	
 	get_tree().set_current_scene(current_scene)
 	
 	pass	
@@ -62,8 +59,17 @@ func save_highscore():
 		savegame.close()
 	pass
 	
+	
+	
+	
+	
+	
+func reset_score():
+	score=0
+	
 func set_score():
 	score+=1
 	save_data["highscore"]=score
+	
 func get_score():
 	return score

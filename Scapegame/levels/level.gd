@@ -9,6 +9,7 @@ var lose_label= null
 var losepoint=null
 var timer_for_lose= null
 var plataform= load("res://gameObjects/plataforms.scn")
+var spring= ResourceLoader.load("res://gameObjects/spring.scn")
 
 
 var cantidad_plataformas=0
@@ -19,8 +20,15 @@ var ypos= 400
 
 func generate_random_p(delta):
 	 
-	while (cantidad_plataformas<5): 		
+	while (cantidad_plataformas<10):
+		
+		var item_probal= rand_range(0,10) 		
 		var p=plataform.instance()
+		if item_probal<=2:
+			var sp= spring.instance()
+			p.add_child(sp)
+			sp.set_pos(Vector2(  (rand_range(-100,100)), -80 ))
+		
 		p.set_pos(Vector2(rand_range(50,350),ypos))			 
 		plataforms.add_child(p)
 		 
@@ -41,6 +49,8 @@ func _ready():
 	lose_label.hide()	 
 	set_process(true)	
 	pass
+	
+	
 func losepoint_set_pos(pos):
 	if player.get_linear_velocity().y<=0:
 		losepoint.set_pos(Vector2(200,pos+1000))
@@ -75,8 +85,10 @@ func _on_Timer_delete_p_timeout():
 
 
 func _on_Button_pressed():
-	global.goto_scene("res://gui/main_menu.scn")
 	global.save_highscore()
+	global.reset_score()
+	global.goto_scene("res://gui/main_menu.scn")
+	
 	get_tree().set_pause(false)
 	
  
@@ -88,6 +100,7 @@ func _on_losepoint_body_enter( body ):
 		lose_label.show()
 		player.set_axis_velocity(Vector2(0,-800))
 		player.anim.play("lose")
+		player.get_node("Camera2D").set_offset(Vector2(0,100))
 		
 		timer_for_lose.start()
 		
