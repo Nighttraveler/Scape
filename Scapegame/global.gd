@@ -67,8 +67,8 @@ func save_highscore():
 func reset_score():
 	score=0
 	
-func set_score():
-	score+=1
+func set_score( ):
+	score+= 10
 	save_data["highscore"]=score
 	
 func get_score():

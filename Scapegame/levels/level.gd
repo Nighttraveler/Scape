@@ -61,6 +61,7 @@ func _process(delta):
 	spawn_plataform(delta)
 	show_score.set_text(str(global.get_score()))
 	losepoint_set_pos(player.get_pos().y)
+	 
 	#print(player.get_linear_velocity().y)
 	
 	pass
