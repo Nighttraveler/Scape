@@ -23,6 +23,8 @@ func _ready():
 	anim=get_node("AnimationPlayer")
 	set_fixed_process(true)
 	global=get_node("/root/Global")
+	 
+	 
 	pass
 
 
