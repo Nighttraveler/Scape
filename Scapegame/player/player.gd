@@ -1,9 +1,9 @@
 
 extends RigidBody2D
 
-export var Jump_heigth= 200
-export var Move_speed= 500
-export var Player_acceleration= 5
+export var Jump_heigth= 650
+export var Move_speed= 350 setget set_moveSpeed,get_moveSpeed
+export var Player_acceleration= 5 setget set_Player_acceleration,get_Player_acceleration
 
 var feet= null
 var feet2=null
@@ -30,6 +30,7 @@ func _ready():
 
 func _fixed_process(delta): 
 	act_linear_velocity = get_linear_velocity().y
+	 
 	moving(delta) 
 	teleport()
 	jump() 
@@ -72,9 +73,16 @@ func moving(delta):
 	else:
 		move(delta,0,Player_acceleration)
 		
-	 
-		
+	pass
+
+func set_moveSpeed(speed):
+	Move_speed=speed
+	pass
+func get_moveSpeed():
+	return Move_speed
 	
-
- 
-
+func set_Player_acceleration(accel):
+	Player_acceleration=accel
+func get_Player_acceleration():
+	return Player_acceleration
+	

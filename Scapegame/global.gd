@@ -3,7 +3,7 @@ extends Node
 #FILE
 var savegame= File.new()
 
-var score=0
+var score=0	setget set_score,get_score
 var save_path= "user://savegame.bin"
 var current_scene= null 
 
@@ -67,8 +67,8 @@ func save_highscore():
 func reset_score():
 	score=0
 	
-func set_score( ):
-	score+= 10
+func set_score(scr):
+	score+= scr
 	save_data["highscore"]=score
 	
 func get_score():
