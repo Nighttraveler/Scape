@@ -22,7 +22,7 @@ var cantidad_plataformas=0
 var first=true
 var last_plataform_ypos
 var ypos= 400
-var next_p_normal= true
+var plat_sp
 
 func random_objects(probal,p):
 		
@@ -62,26 +62,30 @@ func generate_random_p(delta):
 		var item_probal= rand_range(0,10)		 
 		var p=plataform.instance()
 		plataforms.add_child(p)
-		random_objects(item_probal,p)		
-		if next_p_normal:				 
-			p.set_pos(Vector2(rand_range(50,350),ypos))
-			ypos-=200			
-			 
-		else:
-			ypos-=450
-			p.set_pos(Vector2(rand_range(50,350),ypos))
-			
-			next_p_normal=true
+		random_objects(item_probal,p)
+		
 		for sp in p.get_children():
 			if sp.get_name()=="spring":
-				next_p_normal=false
+				plat_sp=true
+
+		p.set_pos(Vector2(rand_range(50,350),ypos))
+		if !plat_sp:
+			ypos-=200			
+		else:
+			plat_sp=false			
+			ypos-=450
+		
 				
-		 
-		var c= coin.instance()
-		c.set_pos( Vector2(rand_range(5,395),rand_range(player.get_pos().y-200,player.get_pos().y-5000) ))
-		coins.add_child(c)
+		if item_probal<=8: 
+			var c= coin.instance()
+			p.add_child(c)
+			c.set_pos( Vector2(rand_range(5,395),rand_range(-50,-500)))
+			c.set_z(1)
 		last_plataform_ypos=p.get_pos().y
 		cantidad_plataformas+=1 
+		print(p.get_pos())
+	
+	print("otra tanda")	
 	pass
 	 
 func _ready():
@@ -94,7 +98,8 @@ func _ready():
 	losepoint= get_node("losepoint")
 	lose_label= get_node("Ui/lose_label")
 	timer_for_lose= get_node("Ui/Timer")
-	coins= get_node("coins")
+	#coins= get_node("coins")
+	plat_sp=false
 	lose_label.hide()	 
 	set_fixed_process(true)	
 	
@@ -120,21 +125,22 @@ func spawn_plataform(delta):
 		first=false
 	if player.get_pos().y<=last_plataform_ypos+200:
 		cantidad_plataformas=0
+		
 		generate_random_p(delta)
 		#print(plataforms.get_child_count())
 	pass		
  
 func delete_p():
 	for i in plataforms.get_children():
-		if i.get_pos().y>player.get_pos().y+500: #Cambiar
+		if i.get_pos().y>player.get_pos().y+550: 
 			i.queue_free()
 	pass
 	
-func delete_c():
-	for i in coins.get_children():
-		if i.get_pos().y>player.get_pos().y+500: #Cambiar
-			i.queue_free()
-	pass
+#func delete_c():
+#	for i in coins.get_children():
+#		if i.get_pos().y>player.get_pos().y+500: #Cambiar
+#			i.queue_free()
+#	pass
 		
 func _on_Timer_delete_p_timeout():
 	delete_p()
@@ -170,6 +176,6 @@ func _on_Timer_timeout():
 func _on_Timer_player_menor_speed_timeout():
 	if player.get_moveSpeed()>=200:
 		player.set_moveSpeed(player.get_moveSpeed()-50)
-		print(player.get_moveSpeed())
+		
 	
 	pass # replace with function body
