@@ -21,5 +21,5 @@ func _on_Area2D_body_enter( body ):
 		body.set_axis_velocity(Vector2(0,-1100))
 		global.set_score( 5)
 		anim.play("spring")		
-		body.anim.play("jump")
+		body.anim_player.play("jump")
 	pass # replace with function body

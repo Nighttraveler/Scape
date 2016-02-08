@@ -23,6 +23,41 @@ var first=true
 var last_plataform_ypos
 var ypos= 400
 var plat_sp
+var puntos
+func _ready():
+	# Initialization here
+	Globals.set("died",false)
+	randomize()
+	plataforms= get_node("plataforms")
+	player=get_node("player")
+	show_score= get_node("Ui/score")
+	global= get_node("/root/Global")
+	losepoint= get_node("losepoint")
+	lose_label= get_node("Ui/lose_label")
+	timer_for_lose= get_node("Ui/Timer")
+	puntos=0
+	plat_sp=false
+	lose_label.hide()	 
+	set_fixed_process(true)		
+	pass
+
+func _fixed_process(delta):
+	var altura=int(abs(player.get_pos().y))
+	
+	spawn_plataform(delta)
+	show_score.set_text(str(global.get_score()))
+	losepoint_set_pos(player.get_pos().y)	 
+	if  altura>puntos:
+		puntos+=altura
+		print(puntos)
+	pass
+
+func _on_Button_pressed():
+	global.save_highscore()
+	global.reset_score()
+	global.goto_scene("res://gui/main_menu.scn")	
+	get_tree().set_pause(false)
+	pass # replace with function body
 
 func random_objects(probal,p):
 		
@@ -59,9 +94,9 @@ func generate_random_p(delta):
 	
 	while (cantidad_plataformas<10):
 		  
-		var item_probal= rand_range(0,10)		 
+		var item_probal= randi()%10		 
 		var p=plataform.instance()
-		plataforms.add_child(p)
+		
 		random_objects(item_probal,p)
 		
 		for sp in p.get_children():
@@ -75,99 +110,54 @@ func generate_random_p(delta):
 			plat_sp=false			
 			ypos-=450
 		
-				
+		plataforms.add_child(p)		
 		if item_probal<=8: 
 			var c= coin.instance()
 			p.add_child(c)
-			c.set_pos( Vector2(rand_range(5,395),rand_range(-50,-500)))
+			c.set_pos( Vector2(rand_range(-500,500),rand_range(-100,-500)))
 			c.set_z(1)
 		last_plataform_ypos=p.get_pos().y
 		cantidad_plataformas+=1 
-		print(p.get_pos())
-	
-	print("otra tanda")	
-	pass
-	 
-func _ready():
-	# Initialization here
-	randomize()
-	plataforms= get_node("plataforms")
-	player=get_node("player")
-	show_score= get_node("Ui/score")
-	global= get_node("/root/Global")
-	losepoint= get_node("losepoint")
-	lose_label= get_node("Ui/lose_label")
-	timer_for_lose= get_node("Ui/Timer")
-	#coins= get_node("coins")
-	plat_sp=false
-	lose_label.hide()	 
-	set_fixed_process(true)	
-	
 	pass
 	
-	
-func _fixed_process(delta):
-
-	spawn_plataform(delta)
-	show_score.set_text(str(global.get_score()))
-	losepoint_set_pos(player.get_pos().y)	 
-	#print(player.get_linear_velocity().y)	
-	pass
-
-func losepoint_set_pos(pos):
-	if player.get_linear_velocity().y<=0:
-		losepoint.set_pos(Vector2(200,pos+300)) #Cambiar
-	pass	
-			
 func spawn_plataform(delta):
 	if first:
 		generate_random_p(delta)
 		first=false
 	if player.get_pos().y<=last_plataform_ypos+200:
-		cantidad_plataformas=0
-		
+		cantidad_plataformas=0		
 		generate_random_p(delta)
-		#print(plataforms.get_child_count())
-	pass		
- 
+		 
+	pass
+	
 func delete_p():
 	for i in plataforms.get_children():
 		if i.get_pos().y>player.get_pos().y+550: 
 			i.queue_free()
 	pass
-	
-#func delete_c():
-#	for i in coins.get_children():
-#		if i.get_pos().y>player.get_pos().y+500: #Cambiar
-#			i.queue_free()
-#	pass
-		
-func _on_Timer_delete_p_timeout():
-	delete_p()
-	#print(player.Move_speed)
-	pass # replace with function body
 
-
-func _on_Button_pressed():
-	global.save_highscore()
-	global.reset_score()
-	global.goto_scene("res://gui/main_menu.scn")	
-	get_tree().set_pause(false)
-	pass # replace with function body
+# LOSEPOINT FUNCTIONS
+func losepoint_set_pos(pos):
+	if player.get_linear_velocity().y<=0:
+		losepoint.set_pos(Vector2(200,pos+300))  
+	pass
 
 func _on_losepoint_body_enter( body ):
 	if body.get_name()=="player":
 		lose_label.show()
 		player.set_axis_velocity(Vector2(0,-800))
-		player.anim.play("lose")
-		#player.get_node("Camera2D").set_offset(Vector2(0,100))
-		
+		player.anim_player.play("lose")
+		Globals.set("died",true)
 		timer_for_lose.start()
-		
 		
 	pass # replace with function body
 
+# TIMERS FUNCTIONS
 
+func _on_Timer_delete_p_timeout():
+	delete_p()	 
+	pass # replace with function body
+	
 func _on_Timer_timeout():
 	get_tree().set_pause(true)
 	pass # replace with function body
@@ -175,7 +165,5 @@ func _on_Timer_timeout():
 
 func _on_Timer_player_menor_speed_timeout():
 	if player.get_moveSpeed()>=200:
-		player.set_moveSpeed(player.get_moveSpeed()-50)
-		
-	
+		player.set_moveSpeed(player.get_moveSpeed()-50)	
 	pass # replace with function body

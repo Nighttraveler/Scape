@@ -7,11 +7,14 @@ export var Player_acceleration= 5 setget set_Player_acceleration,get_Player_acce
 
 var feet= null
 var feet2=null
-var anim= null
+ 
 var current_pos= 0
 var act_linear_velocity
 var global
-
+ 
+onready var anim_player= get_node("AnimationPlayer")
+var anim=""
+var next_anim=""
 
 func _ready():
 	# Initialization here
@@ -19,8 +22,7 @@ func _ready():
 	feet=get_node("RayCast2D")
 	feet2= get_node("RayCast2D1")
 	feet.add_exception(self)
-	feet2.add_exception(self)
-	anim=get_node("AnimationPlayer")
+	feet2.add_exception(self)	 
 	set_fixed_process(true)
 	global=get_node("/root/Global")
 	 
@@ -33,22 +35,20 @@ func _fixed_process(delta):
 	 
 	moving(delta) 
 	teleport()
-	jump() 
+	jump()
+	 
+ 
 	
-	
+	if anim!=next_anim:
+		anim=next_anim
+		anim_player.play(anim)
 	
 	 
 func jump():	
 	if  act_linear_velocity==0 &&( feet.is_colliding() or feet2.is_colliding() ):
 		set_linear_velocity(Vector2(0,-Jump_heigth))
-		anim.play("jump")	 
-		
-	 
+		next_anim="jump"	 
 	pass
-
-
-
-
 
 func teleport():
 	if get_pos().x<0:
@@ -62,16 +62,20 @@ func move(delta,sp,acc):
 	pass
 
 func moving(delta):
-	if (Input.is_action_pressed("ui_left")):
-		move(delta,-Move_speed,Player_acceleration)
-		get_node("AnimatedSprite").set_flip_h(true)
-		anim.play("walk")
-	elif (Input.is_action_pressed("ui_right")):
-		move(delta,Move_speed,Player_acceleration)
-		get_node("AnimatedSprite").set_flip_h(false)
-		anim.play("walk")
-	else:
-		move(delta,0,Player_acceleration)
+	if Globals.get("died")!=true:
+		
+		if (Input.is_action_pressed("ui_left")):
+			move(delta,-Move_speed,Player_acceleration)
+			get_node("AnimatedSprite").set_flip_h(true)
+			next_anim="walk"
+			 
+		elif (Input.is_action_pressed("ui_right")):
+			move(delta,Move_speed,Player_acceleration)
+			get_node("AnimatedSprite").set_flip_h(false)
+			next_anim="walk"
+			 
+		else:
+			move(delta,0,Player_acceleration)
 		
 	pass
 
