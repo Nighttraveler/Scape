@@ -23,7 +23,7 @@ var first=true
 var last_plataform_ypos
 var ypos= 400
 var plat_sp
-var puntos
+ 
 func _ready():
 	# Initialization here
 	Globals.set("died",false)
@@ -35,7 +35,7 @@ func _ready():
 	losepoint= get_node("losepoint")
 	lose_label= get_node("Ui/lose_label")
 	timer_for_lose= get_node("Ui/Timer")
-	puntos=0
+ 
 	plat_sp=false
 	lose_label.hide()	 
 	set_fixed_process(true)		
@@ -43,13 +43,12 @@ func _ready():
 
 func _fixed_process(delta):
 	var altura=int(abs(player.get_pos().y))
-	
+ 
 	spawn_plataform(delta)
 	show_score.set_text(str(global.get_score()))
 	losepoint_set_pos(player.get_pos().y)	 
-	if  altura>puntos:
-		puntos+=altura
-		print(puntos)
+ 
+		
 	pass
 
 func _on_Button_pressed():
@@ -98,19 +97,26 @@ func generate_random_p(delta):
 		var p=plataform.instance()
 		
 		random_objects(item_probal,p)
-		
-		for sp in p.get_children():
-			if sp.get_name()=="spring":
-				plat_sp=true
-
-		p.set_pos(Vector2(rand_range(50,350),ypos))
-		if !plat_sp:
-			ypos-=200			
+		if plataforms.get_child_count()==0:
+			break
 		else:
-			plat_sp=false			
-			ypos-=450
+			var lp= plataforms.get_child(plataforms.get_child_count()-1)
+			for i in lp.get_children():
+				if i.get_name()=="spring":
+					print("el ultimo tiene sp")
+					plat_sp=true
 		
-		plataforms.add_child(p)		
+		
+		if !plat_sp:
+			ypos-=200
+						
+		else:						
+			ypos-=620
+			plat_sp=false
+		plataforms.add_child(p)
+		p.set_pos(Vector2(rand_range(50,350),ypos))
+
+				
 		if item_probal<=8: 
 			var c= coin.instance()
 			p.add_child(c)
