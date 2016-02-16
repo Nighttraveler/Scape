@@ -48,7 +48,7 @@
 ; 
 ; ******************* 
 ; 
-; Template Generated Using: 2.0.beta.custom_build
+; Template Generated Using: 2.0.rc1.custom_build
 ;    
 ; 
 
@@ -241,6 +241,20 @@ FileDialog.files_disabled = default
 Fonts.normal = default
 Fonts.source = default
 Fonts.large = default
+
+; *********
+; GraphEdit
+; *********
+
+; StyleBox Items:
+
+GraphEdit.bg = default
+
+; Icon Items:
+
+GraphEdit.minus = default
+GraphEdit.reset = default
+GraphEdit.more = default
 
 ; *********
 ; GraphNode

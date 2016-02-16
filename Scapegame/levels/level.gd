@@ -10,6 +10,7 @@ var lose_label= null
 var losepoint=null
 var timer_for_lose= null
 
+var fly_enemy= load("res://enemys/fly-enemy/fly-enemy.scn")
 var plataform= load("res://gameObjects/plataforms.scn")
 var spring= ResourceLoader.load("res://gameObjects/spring.scn")
 var grass1= ResourceLoader.load("res://gameObjects/grass1.scn")
@@ -103,7 +104,7 @@ func generate_random_p(delta):
 			var lp= plataforms.get_child(plataforms.get_child_count()-1)
 			for i in lp.get_children():
 				if i.get_name()=="spring":
-					print("el ultimo tiene sp")
+					
 					plat_sp=true
 		
 		
@@ -124,6 +125,14 @@ func generate_random_p(delta):
 			c.set_z(1)
 		last_plataform_ypos=p.get_pos().y
 		cantidad_plataformas+=1 
+	
+	var f= fly_enemy.instance()
+	
+	f.set_pos(Vector2(20,last_plataform_ypos+75))
+	f.set_target(Vector2(400,f.get_pos().y))
+	f.set_scale(Vector2(0.5,0.5))
+	plataforms.add_child(f)
+	 
 	pass
 	
 func spawn_plataform(delta):
@@ -133,7 +142,7 @@ func spawn_plataform(delta):
 	if player.get_pos().y<=last_plataform_ypos+200:
 		cantidad_plataformas=0		
 		generate_random_p(delta)
-		 
+	 
 	pass
 	
 func delete_p():
@@ -147,14 +156,16 @@ func losepoint_set_pos(pos):
 	if player.get_linear_velocity().y<=0:
 		losepoint.set_pos(Vector2(200,pos+300))  
 	pass
-
+func lose():
+	lose_label.show()
+	player.set_axis_velocity(Vector2(0,-800))
+	player.anim_player.play("lose")
+	Globals.set("died",true)
+	timer_for_lose.start()
 func _on_losepoint_body_enter( body ):
 	if body.get_name()=="player":
-		lose_label.show()
-		player.set_axis_velocity(Vector2(0,-800))
-		player.anim_player.play("lose")
-		Globals.set("died",true)
-		timer_for_lose.start()
+		lose()
+
 		
 	pass # replace with function body
 
@@ -171,5 +182,12 @@ func _on_Timer_timeout():
 
 func _on_Timer_player_menor_speed_timeout():
 	if player.get_moveSpeed()>=200:
-		player.set_moveSpeed(player.get_moveSpeed()-50)	
+		player.set_moveSpeed(player.get_moveSpeed()-50)
+		print(player.get_moveSpeed())	
+	pass # replace with function body
+
+
+func _on_replay_pressed():
+	Global.goto_scene("res://levels/level01.scn")
+	get_tree().set_pause(false)
 	pass # replace with function body
