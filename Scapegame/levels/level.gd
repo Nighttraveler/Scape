@@ -44,7 +44,7 @@ func _ready():
 
 func _fixed_process(delta):
 	var altura=int(abs(player.get_pos().y))
- 
+	#print(Input.get_accelerometer())
 	spawn_plataform(delta)
 	show_score.set_text(str(global.get_score()))
 	losepoint_set_pos(player.get_pos().y)	 
@@ -183,7 +183,7 @@ func _on_Timer_timeout():
 func _on_Timer_player_menor_speed_timeout():
 	if player.get_moveSpeed()>=200:
 		player.set_moveSpeed(player.get_moveSpeed()-50)
-		print(player.get_moveSpeed())	
+		#print(player.get_moveSpeed())	
 	pass # replace with function body
 
 

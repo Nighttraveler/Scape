@@ -64,12 +64,12 @@ func move(delta,sp,acc):
 func moving(delta):
 	if Globals.get("died")!=true:
 		
-		if (Input.is_action_pressed("ui_left")):
+		if (Input.is_action_pressed("ui_left") or Input.get_accelerometer().x>1):
 			move(delta,-Move_speed,Player_acceleration)
 			get_node("AnimatedSprite").set_flip_h(true)
 			next_anim="walk"
 			 
-		elif (Input.is_action_pressed("ui_right")):
+		elif (Input.is_action_pressed("ui_right") or Input.get_accelerometer().x<-1):
 			move(delta,Move_speed,Player_acceleration)
 			get_node("AnimatedSprite").set_flip_h(false)
 			next_anim="walk"
