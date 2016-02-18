@@ -4,11 +4,12 @@ extends Node
 var savegame= File.new()
 
 var score=0	setget set_score,get_score
+var coins=0 setget set_coins,get_coins
 var save_path= "user://savegame.bin"
 var current_scene= null 
 
 #BY NOW JUST SAVE THE HIGH SCORE
-var save_data= {"highscore":score}
+var save_data= {"highscore":score, "coins":coins}
 
 
 func _ready():
@@ -59,17 +60,33 @@ func save_highscore():
 		savegame.close()
 	pass
 	
+func get_saved_coins_cant():
+	savegame.open(save_path,File.READ)
+	var s= savegame.get_var()
+	savegame.close()
+	return s["coins"]
 	
-	
+		
+				
+func save_cant_coins():
+	savegame.open(save_path,File.WRITE)
+	savegame.store_var(save_data)
+	savegame.close()	
 	
 	
 	
 func reset_score():
-	score=0
-	
+	score=0	
 func set_score(scr):
-	score+= scr
-	save_data["highscore"]=score
-	
+	score= scr
+	save_data["highscore"]=score	
 func get_score():
 	return score
+	
+ 
+func set_coins(coin):
+	
+	coins+=coin
+	save_data["coins"]+=coins
+func get_coins():
+	return coins

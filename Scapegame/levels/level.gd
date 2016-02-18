@@ -21,6 +21,7 @@ var coin =  ResourceLoader.load("res://gameObjects/coin.scn")
 
 var cantidad_plataformas=0
 var first=true
+var generate_fly_enemy
 var last_plataform_ypos
 var ypos= 400
 var plat_sp
@@ -41,23 +42,22 @@ func _ready():
 	lose_label.hide()	 
 	set_fixed_process(true)		
 	pass
-
+var puntaje=0
 func _fixed_process(delta):
 	var altura=int(abs(player.get_pos().y))
 	#print(Input.get_accelerometer())
 	spawn_plataform(delta)
 	show_score.set_text(str(global.get_score()))
-	losepoint_set_pos(player.get_pos().y)	 
- 
-		
+	losepoint_set_pos(player.get_pos().y)
+	
+	if puntaje< abs(player.get_pos().y):
+		puntaje= int(abs(player.get_pos().y))
+		Global.set_score(puntaje)
+	print(Global.get_coins())	
+	 
 	pass
 
-func _on_Button_pressed():
-	global.save_highscore()
-	global.reset_score()
-	global.goto_scene("res://gui/main_menu.scn")	
-	get_tree().set_pause(false)
-	pass # replace with function body
+
 
 func random_objects(probal,p):
 		
@@ -110,10 +110,11 @@ func generate_random_p(delta):
 		
 		if !plat_sp:
 			ypos-=200
-						
+			generate_fly_enemy=true		
 		else:						
 			ypos-=620
 			plat_sp=false
+			generate_fly_enemy=false
 		plataforms.add_child(p)
 		p.set_pos(Vector2(rand_range(50,350),ypos))
 
@@ -124,14 +125,15 @@ func generate_random_p(delta):
 			c.set_pos( Vector2(rand_range(-500,500),rand_range(-100,-500)))
 			c.set_z(1)
 		last_plataform_ypos=p.get_pos().y
-		cantidad_plataformas+=1 
+		cantidad_plataformas+=1
 	
-	var f= fly_enemy.instance()
-	
-	f.set_pos(Vector2(20,last_plataform_ypos+75))
-	f.set_target(Vector2(400,f.get_pos().y))
-	f.set_scale(Vector2(0.5,0.5))
-	plataforms.add_child(f)
+			 
+	if generate_fly_enemy:
+		var f= fly_enemy.instance()	
+		f.set_pos(Vector2(randf(20,380),last_plataform_ypos+75))
+		f.set_target(Vector2(400,f.get_pos().y))
+		f.set_scale(Vector2(0.5,0.5))
+		plataforms.add_child(f)
 	 
 	pass
 	
@@ -149,6 +151,7 @@ func delete_p():
 	for i in plataforms.get_children():
 		if i.get_pos().y>player.get_pos().y+550: 
 			i.queue_free()
+	
 	pass
 
 # LOSEPOINT FUNCTIONS
@@ -186,8 +189,19 @@ func _on_Timer_player_menor_speed_timeout():
 		#print(player.get_moveSpeed())	
 	pass # replace with function body
 
+#BUTTON FUCTIONS
 
 func _on_replay_pressed():
+	global.save_highscore()
+	Global.save_cant_coins()
+	 
+	global.reset_score()
 	Global.goto_scene("res://levels/level01.scn")
+	get_tree().set_pause(false)
+	pass # replace with function body
+func _on_Button_pressed():
+	global.save_highscore()
+	global.reset_score()
+	global.goto_scene("res://gui/main_menu.scn")	
 	get_tree().set_pause(false)
 	pass # replace with function body
