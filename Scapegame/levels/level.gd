@@ -1,14 +1,13 @@
   
 extends Node
 
-var player= null
-var plataforms=null
-var coins= null
-var show_score= null
-var global= null
-var lose_label= null
-var losepoint=null
-var timer_for_lose= null
+onready var player= get_node("player")
+onready var plataforms= get_node("plataforms") 
+onready var show_score= get_node("Ui/score")
+ 
+onready var lose_label= get_node("Ui/lose_label") 
+onready var losepoint= get_node("losepoint")
+onready var timer_for_lose=  get_node("Ui/Timer")
 
 var fly_enemy= load("res://enemys/fly-enemy/fly-enemy.scn")
 var plataform= load("res://gameObjects/plataforms.scn")
@@ -25,29 +24,26 @@ var generate_fly_enemy
 var last_plataform_ypos
 var ypos= 400
 var plat_sp
+var puntaje=0
  
 func _ready():
 	# Initialization here
 	Globals.set("died",false)
-	randomize()
-	plataforms= get_node("plataforms")
-	player=get_node("player")
-	show_score= get_node("Ui/score")
-	global= get_node("/root/Global")
-	losepoint= get_node("losepoint")
-	lose_label= get_node("Ui/lose_label")
-	timer_for_lose= get_node("Ui/Timer")
- 
+	randomize() 
+	 
+	generate_fly_enemy= false
 	plat_sp=false
 	lose_label.hide()	 
 	set_fixed_process(true)		
 	pass
-var puntaje=0
+	
+	
+
 func _fixed_process(delta):
 	var altura=int(abs(player.get_pos().y))
 	#print(Input.get_accelerometer())
 	spawn_plataform(delta)
-	show_score.set_text(str(global.get_score()))
+	show_score.set_text(str(Global.get_score()))
 	losepoint_set_pos(player.get_pos().y)
 	
 	if puntaje< abs(player.get_pos().y):
@@ -104,7 +100,6 @@ func generate_random_p(delta):
 			var lp= plataforms.get_child(plataforms.get_child_count()-1)
 			for i in lp.get_children():
 				if i.get_name()=="spring":
-					
 					plat_sp=true
 		
 		
@@ -119,7 +114,7 @@ func generate_random_p(delta):
 		p.set_pos(Vector2(rand_range(50,350),ypos))
 
 				
-		if item_probal<=8: 
+		if item_probal<=6: 
 			var c= coin.instance()
 			p.add_child(c)
 			c.set_pos( Vector2(rand_range(-500,500),rand_range(-100,-500)))
@@ -157,7 +152,7 @@ func delete_p():
 # LOSEPOINT FUNCTIONS
 func losepoint_set_pos(pos):
 	if player.get_linear_velocity().y<=0:
-		losepoint.set_pos(Vector2(200,pos+300))  
+		losepoint.set_pos(Vector2(200,pos+350))  
 	pass
 func lose():
 	lose_label.show()
@@ -165,6 +160,7 @@ func lose():
 	player.anim_player.play("lose")
 	Globals.set("died",true)
 	timer_for_lose.start()
+	
 func _on_losepoint_body_enter( body ):
 	if body.get_name()=="player":
 		lose()
@@ -186,22 +182,31 @@ func _on_Timer_timeout():
 func _on_Timer_player_menor_speed_timeout():
 	if player.get_moveSpeed()>=200:
 		player.set_moveSpeed(player.get_moveSpeed()-50)
-		#print(player.get_moveSpeed())	
+	
 	pass # replace with function body
 
 #BUTTON FUCTIONS
 
 func _on_replay_pressed():
-	global.save_highscore()
+	Global.save_highscore()
 	Global.save_cant_coins()
-	 
-	global.reset_score()
+	
+	Global.reset_coins()	 
+	Global.reset_score()
+	
 	Global.goto_scene("res://levels/level01.scn")
 	get_tree().set_pause(false)
 	pass # replace with function body
+	
+	
 func _on_Button_pressed():
-	global.save_highscore()
-	global.reset_score()
-	global.goto_scene("res://gui/main_menu.scn")	
+	
+	Global.save_highscore()
+	Global.save_cant_coins()
+	
+	Global.reset_score()
+	Global.reset_coins()
+	
+	Global.goto_scene("res://gui/main_menu.scn")	
 	get_tree().set_pause(false)
 	pass # replace with function body

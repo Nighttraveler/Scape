@@ -69,6 +69,7 @@ func get_saved_coins_cant():
 		
 				
 func save_cant_coins():
+	save_data["coins"]= get_saved_coins_cant()+coins
 	savegame.open(save_path,File.WRITE)
 	savegame.store_var(save_data)
 	savegame.close()	
@@ -83,10 +84,9 @@ func set_score(scr):
 func get_score():
 	return score
 	
- 
+func reset_coins():
+	coins=0 
 func set_coins(coin):
-	
-	coins+=coin
-	save_data["coins"]+=coins
+	coins+=coin	
 func get_coins():
 	return coins
