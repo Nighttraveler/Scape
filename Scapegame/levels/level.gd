@@ -3,14 +3,13 @@ extends Node
 
 onready var player= get_node("player")
 onready var plataforms= get_node("plataforms") 
-onready var show_score= get_node("Ui/score")
- 
+onready var show_score= get_node("Ui/score") 
 onready var lose_label= get_node("Ui/lose_label") 
 onready var losepoint= get_node("losepoint")
 onready var timer_for_lose=  get_node("Ui/Timer")
 
+
 var fly_enemy= load("res://enemys/fly-enemy/fly-enemy.scn")
-var plataform= load("res://gameObjects/plataforms.scn")
 var spring= ResourceLoader.load("res://gameObjects/spring.scn")
 var grass1= ResourceLoader.load("res://gameObjects/grass1.scn")
 var grass2= ResourceLoader.load("res://gameObjects/grass2.scn")
@@ -18,6 +17,7 @@ var cactus= ResourceLoader.load("res://gameObjects/cactus.scn")
 var speedUp= ResourceLoader.load("res://gameObjects/speedUp.scn")
 var coin =  ResourceLoader.load("res://gameObjects/coin.scn")
 
+var p_load
 var cantidad_plataformas=0
 var first=true
 var generate_fly_enemy
@@ -25,12 +25,12 @@ var last_plataform_ypos
 var ypos= 400
 var plat_sp
 var puntaje=0
- 
+var add_miscs= true
 func _ready():
 	# Initialization here
 	Globals.set("died",false)
 	randomize() 
-	 
+	p_load= "plataforms" 
 	generate_fly_enemy= false
 	plat_sp=false
 	lose_label.hide()	 
@@ -50,29 +50,29 @@ func _fixed_process(delta):
 		puntaje= int(abs(player.get_pos().y))
 		Global.set_score(puntaje)
 	print(Global.get_coins())	
-	 
+	print(p_load)
 	pass
 
 
 
 func random_objects(probal,p):
+	if (add_miscs):	
+		if probal<=4:
+			var c= cactus.instance()
+			p.add_child(c)
+			c.set_pos(Vector2(  (rand_range(-150,150)), -120 ))
 		
-	if probal<=4:
-		var c= cactus.instance()
-		p.add_child(c)
-		c.set_pos(Vector2(  (rand_range(-150,150)), -120 ))
-	
-	if probal<=5:
-		var g= grass1.instance()
-		p.add_child(g)
-		g.set_pos(Vector2(  (rand_range(-150,150)), -80 ))
+		if probal<=5:
+			var g= grass1.instance()
+			p.add_child(g)
+			g.set_pos(Vector2(  (rand_range(-150,150)), -80 ))
+			
+		if probal>=5:
+			var g= grass2.instance()
+			p.add_child(g)
+			g.set_pos(Vector2(  (rand_range(-150,150)), -80 ))
+			
 		
-	if probal>=5:
-		var g= grass2.instance()
-		p.add_child(g)
-		g.set_pos(Vector2(  (rand_range(-150,150)), -80 ))
-		
-	
 	if probal<=1:
 		var sp= spring.instance()
 		
@@ -87,7 +87,7 @@ func random_objects(probal,p):
 	pass
 
 func generate_random_p(delta):
-	
+	var plataform= load("res://gameObjects/"+p_load+".scn")
 	while (cantidad_plataformas<10):
 		  
 		var item_probal= randi()%10		 
@@ -209,4 +209,10 @@ func _on_Button_pressed():
 	
 	Global.goto_scene("res://gui/main_menu.scn")	
 	get_tree().set_pause(false)
+	pass # replace with function body
+ 
+
+func _on_Change_plataforms_to__stone_timeout():
+	add_miscs= false
+	p_load="plataforms_stone"
 	pass # replace with function body
