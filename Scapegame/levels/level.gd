@@ -22,7 +22,7 @@ var cantidad_plataformas=0
 var first=true
 var generate_fly_enemy
 var last_plataform_ypos
-var ypos= 400
+var ypos= -200
 var plat_sp
 var puntaje=0
 var add_miscs= true
@@ -188,8 +188,8 @@ func _on_Timer_player_menor_speed_timeout():
 #BUTTON FUCTIONS
 
 func _on_replay_pressed():
-	Global.save_highscore()
-	Global.save_cant_coins()
+	Global.save_dic_data()
+	
 	
 	Global.reset_coins()	 
 	Global.reset_score()
@@ -201,8 +201,8 @@ func _on_replay_pressed():
 	
 func _on_Button_pressed():
 	
-	Global.save_highscore()
-	Global.save_cant_coins()
+	Global.save_dic_data()
+	
 	
 	Global.reset_score()
 	Global.reset_coins()
