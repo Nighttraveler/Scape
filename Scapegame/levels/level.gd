@@ -4,7 +4,7 @@ extends Node
 onready var player= get_node("player")
 onready var plataforms= get_node("plataforms") 
 onready var show_score= get_node("Ui/score") 
-onready var lose_label= get_node("Ui/lose_label") 
+ 
 onready var losepoint= get_node("losepoint")
 onready var timer_for_lose=  get_node("Ui/Timer")
 
@@ -15,6 +15,7 @@ var grass1= ResourceLoader.load("res://gameObjects/grass1.scn")
 var grass2= ResourceLoader.load("res://gameObjects/grass2.scn")
 var cactus= ResourceLoader.load("res://gameObjects/cactus.scn")
 var speedUp= ResourceLoader.load("res://gameObjects/speedUp.scn")
+var speedDown= ResourceLoader.load("res://gameObjects/speedDown.scn")
 var coin =  ResourceLoader.load("res://gameObjects/coin.scn")
 
 var p_load
@@ -33,7 +34,7 @@ func _ready():
 	p_load= "plataforms" 
 	generate_fly_enemy= false
 	plat_sp=false
-	lose_label.hide()	 
+
 	set_fixed_process(true)		
 	pass
 	
@@ -49,8 +50,10 @@ func _fixed_process(delta):
 	if puntaje< abs(player.get_pos().y):
 		puntaje= int(abs(player.get_pos().y))
 		Global.set_score(puntaje)
-	print(Global.get_coins())	
-	print(p_load)
+	#print(Global.get_coins())	
+	#print(player.get_moveSpeed())
+	
+	
 	pass
 
 
@@ -74,15 +77,17 @@ func random_objects(probal,p):
 			
 		
 	if probal<=1:
-		var sp= spring.instance()
-		
-		if player.get_moveSpeed()<200:
-			var speedItem= speedUp.instance()
-			p.add_child(speedItem)
-			speedItem.set_pos(Vector2(  rand_range(-400,400), -1400 ))
-			
+		var sp= spring.instance()		
 		p.add_child(sp)		
 		sp.set_pos(Vector2(  (rand_range(-100,100)), -80 ))
+	if probal<=0.5:
+		var speedItem= speedUp.instance()
+		p.add_child(speedItem)
+		speedItem.set_pos(Vector2(  rand_range(-400,400), -1400 ))
+	if probal>=9.5:
+		var speedItem= speedDown.instance()
+		p.add_child(speedItem)
+		speedItem.set_pos(Vector2(  rand_range(-400,400), -1400 ))
 		
 	pass
 
@@ -90,7 +95,8 @@ func generate_random_p(delta):
 	var plataform= load("res://gameObjects/"+p_load+".scn")
 	while (cantidad_plataformas<10):
 		  
-		var item_probal= randi()%10		 
+		var item_probal= rand_range(0,10)
+		#print(item_probal)		 
 		var p=plataform.instance()
 		
 		random_objects(item_probal,p)
@@ -125,7 +131,7 @@ func generate_random_p(delta):
 			 
 	if generate_fly_enemy:
 		var f= fly_enemy.instance()	
-		f.set_pos(Vector2(randf(20,380),last_plataform_ypos+75))
+		f.set_pos(Vector2(randf(20,380),last_plataform_ypos+52))
 		f.set_target(Vector2(400,f.get_pos().y))
 		f.set_scale(Vector2(0.5,0.5))
 		plataforms.add_child(f)
@@ -155,7 +161,7 @@ func losepoint_set_pos(pos):
 		losepoint.set_pos(Vector2(200,pos+350))  
 	pass
 func lose():
-	lose_label.show()
+	get_node("Ui/PopupPanel").show()
 	player.set_axis_velocity(Vector2(0,-800))
 	player.anim_player.play("lose")
 	Globals.set("died",true)
@@ -179,12 +185,13 @@ func _on_Timer_timeout():
 	pass # replace with function body
 
 
-func _on_Timer_player_menor_speed_timeout():
-	if player.get_moveSpeed()>=200:
-		player.set_moveSpeed(player.get_moveSpeed()-50)
+ 
 	
+	
+func _on_Change_plataforms_to__stone_timeout():
+	add_miscs= false
+	p_load="plataforms_stone"
 	pass # replace with function body
-
 #BUTTON FUCTIONS
 
 func _on_replay_pressed():
@@ -212,7 +219,6 @@ func _on_Button_pressed():
 	pass # replace with function body
  
 
-func _on_Change_plataforms_to__stone_timeout():
-	add_miscs= false
-	p_load="plataforms_stone"
-	pass # replace with function body
+
+
+

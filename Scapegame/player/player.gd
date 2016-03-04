@@ -90,3 +90,11 @@ func set_Player_acceleration(accel):
 func get_Player_acceleration():
 	return Player_acceleration
 	
+func start_timer():
+	print("iniciado")
+	get_node("back_to_normal_speed").start()
+	print(get_moveSpeed())
+func _on_back_to_normal_speed_timeout():
+	set_moveSpeed(350)
+	print(get_moveSpeed())
+	pass # replace with function body
