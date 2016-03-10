@@ -1,7 +1,7 @@
 
 extends Sprite
 
-var touch= false 
+#var touch= false 
 var global=null
 
 func _ready():
@@ -11,8 +11,8 @@ func _ready():
 	pass
 
 func _on_Area2D_body_enter( body ):
-	if body.get_name()=="player" and body.get_pos().y<get_pos().y and !touch:
+	#if body.get_name()=="player" and body.get_pos().y<get_pos().y :#and !touch:
 		 
-		
-		touch=true
+		#body.set_axis_velocity(Vector2(0,-650))
+		#touch=true
 	pass # replace with function body

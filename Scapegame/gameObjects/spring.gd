@@ -18,7 +18,7 @@ func _ready():
 func _on_Area2D_body_enter( body ):
 
 	if body.get_name()=="player" and abs(body.get_pos().y)>abs(get_node("Area2D").get_pos().y):
-		body.set_axis_velocity(Vector2(0,-1100))
+		body.set_axis_velocity(Vector2(0,-1300))
 		global.set_score( 5)
 		anim.play("spring")		
 		body.anim_player.play("jump")
