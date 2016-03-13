@@ -86,15 +86,22 @@ func random_objects(probal,p):
 			p.add_child(g)
 			g.set_pos(Vector2(  (rand_range(-150,150)), -76 ))
 			
-		
+	if probal<=6: 
+		var c= coin.instance()
+		p.add_child(c)
+		c.set_pos( Vector2(rand_range(-500,500),rand_range(-100,-500)))
+		c.set_z(1)
+			
 	if probal<=1:
 		var sp= spring.instance()		
 		p.add_child(sp)		
 		sp.set_pos(Vector2(  (rand_range(-100,100)), -80 ))
+		
 	if probal<=0.5:
 		var speedItem= speedUp.instance()
 		p.add_child(speedItem)
 		speedItem.set_pos(Vector2(  rand_range(-200,200),rand_range(-400,400) ))
+		
 	if probal>=9:
 		var speedItem= speedDown.instance()
 		p.add_child(speedItem)
@@ -106,20 +113,17 @@ func generate_random_p():
 	var plataform= load("res://gameObjects/plataforms/"+p_load+".scn")
 	while (cantidad_plataformas<10):
 		  
-		var item_probal= rand_range(0,10)
-	
-			 
-		var p=plataform.instance()
-		
+		var item_probal= rand_range(0,10)			 
+		var p=plataform.instance()		
 		random_objects(item_probal,p)
+		
 		if plataforms.get_child_count()==0:
 			break
 		else:
 			var lp= plataforms.get_child(plataforms.get_child_count()-1)
 			for i in lp.get_children():
 				if i.get_name()=="spring":
-					plat_sp=true
-		
+					plat_sp=true		
 		
 		if !plat_sp:
 			ypos-=165
@@ -132,18 +136,14 @@ func generate_random_p():
 		p.set_pos(Vector2(rand_range(50,350),ypos))
 
 				
-		if item_probal<=6: 
-			var c= coin.instance()
-			p.add_child(c)
-			c.set_pos( Vector2(rand_range(-500,500),rand_range(-100,-500)))
-			c.set_z(1)
+
 		last_plataform_ypos=p.get_pos().y
 		cantidad_plataformas+=1
 		 
 			 
 	if generate_fly_enemy:
 		var f= fly_enemy.instance()	
-		f.set_pos(Vector2(randf(20,380),last_plataform_ypos+52))
+		f.set_global_pos(Vector2(randf(20,380),last_plataform_ypos+52))
 		f.set_target(Vector2(400,f.get_pos().y))
 		f.set_scale(Vector2(0.5,0.5))
 		plataforms.add_child(f)
@@ -164,7 +164,7 @@ func spawn_plataform():
 func delete_p():
 	
 	for i in plataforms.get_children():
-		if i.get_global_pos().y>player.get_pos().y+450: 
+		if i.get_global_pos().y>player.get_pos().y+300: 
 			i.queue_free()
 	
 	pass
@@ -172,12 +172,13 @@ func delete_p():
 # LOSEPOINT FUNCTIONS
 func losepoint_set_pos(pos):
 	if player.get_linear_velocity().y<=0:
-		losepoint.set_pos(Vector2(200,pos+400))  
+		losepoint.set_pos(Vector2(200,pos+600))  
 	pass
 func lose():
 	get_node("Ui/PopupPanel").show()
 	get_node("Ui/PopupPanel/lose_label").show()
 	get_node("Ui/PopupPanel/On_pause").hide()
+	get_node("Ui/PopupPanel/back").hide()
 	player.set_axis_velocity(Vector2(0,-800))
 	player.anim_player.play("lose")
 	Globals.set("died",true)
@@ -206,8 +207,6 @@ func _on_Change_plataforms_to__stone_timeout():
 func _on_Change_plataforms_to__wood_timeout():
 	p_load="plataforms_wood"
 	pass # replace with function body	
-	
-
 
 func _on_Change_plataforms_to__cake_timeout():
 	p_load="plataforms_cake"
@@ -234,13 +233,6 @@ func _on_Button_pressed():
 	Global.goto_scene("res://gui/main_menu.scn")	
 	get_tree().set_pause(false)
 	pass # replace with function body 
-
-
-
- 
-
-
-
 
 
 func _on_pauseButton_pressed():
