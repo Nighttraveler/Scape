@@ -15,7 +15,7 @@ var global
 onready var anim_player= get_node("AnimationPlayer")
 var anim=""
 var next_anim=""
-
+var speed
 func _ready():
 	# Initialization here
 	set_contact_monitor(true)
@@ -25,6 +25,7 @@ func _ready():
 	feet2.add_exception(self)	 
 	set_fixed_process(true)
 	global=get_node("/root/Global")
+	speed= get_moveSpeed()
 	
 	set_contact_monitor(true)
 	set_max_contacts_reported(1)
@@ -99,6 +100,6 @@ func start_timer():
 	get_node("back_to_normal_speed").start()
 	print(get_moveSpeed())
 func _on_back_to_normal_speed_timeout():
-	set_moveSpeed(200)
+	set_moveSpeed(speed)
 	print(get_moveSpeed())
 	pass # replace with function body

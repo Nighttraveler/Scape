@@ -22,7 +22,7 @@ var cantidad_plataformas=0
 var first=true
 var generate_fly_enemy
 var last_plataform_ypos
-var ypos=0
+var ypos=-170
 var plat_sp
 var puntaje=0
 var add_miscs= true 
@@ -178,7 +178,7 @@ func lose():
 	get_node("Ui/PopupPanel").show()
 	get_node("Ui/PopupPanel/lose_label").show()
 	get_node("Ui/PopupPanel/On_pause").hide()
-	get_node("Ui/PopupPanel/back").hide()
+	 
 	player.set_axis_velocity(Vector2(0,-800))
 	player.anim_player.play("lose")
 	Globals.set("died",true)
@@ -234,16 +234,21 @@ func _on_Button_pressed():
 	get_tree().set_pause(false)
 	pass # replace with function body 
 
-
+var pause=false
 func _on_pauseButton_pressed():
-	get_tree().set_pause(true)
-	get_node("Ui/PopupPanel").show()
-	get_node("Ui/PopupPanel/On_pause").show()
+	if !pause:
+		get_tree().set_pause(true)
+		get_node("Ui/PopupPanel").show()
+		get_node("Ui/PopupPanel/On_pause").show()
+		pause=true
+	elif pause:
+		if !Globals.get("died"):
+			get_node("Ui/PopupPanel").hide()
+			get_tree().set_pause(false)
+			pause=false
 	pass # replace with function body
 
 
 func _on_back_pressed():
-	if !Globals.get("died"):
-		get_node("Ui/PopupPanel").hide()
-		get_tree().set_pause(false)
+
 	pass # replace with function body
