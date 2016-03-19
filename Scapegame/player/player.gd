@@ -2,7 +2,7 @@
 extends RigidBody2D
 
 export var Jump_heigth= 650
-export var Move_speed= 350 setget set_moveSpeed,get_moveSpeed
+export var Move_speed=200 setget set_moveSpeed,get_moveSpeed
 export var Player_acceleration= 5 setget set_Player_acceleration,get_Player_acceleration
 
 var feet= null
@@ -25,6 +25,10 @@ func _ready():
 	feet2.add_exception(self)	 
 	set_fixed_process(true)
 	global=get_node("/root/Global")
+	
+	set_contact_monitor(true)
+	set_max_contacts_reported(1)
+
 	 
 	 
 	pass
@@ -95,6 +99,6 @@ func start_timer():
 	get_node("back_to_normal_speed").start()
 	print(get_moveSpeed())
 func _on_back_to_normal_speed_timeout():
-	set_moveSpeed(350)
+	set_moveSpeed(200)
 	print(get_moveSpeed())
 	pass # replace with function body

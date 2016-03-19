@@ -18,7 +18,7 @@ func _ready():
 func _on_Area2D_body_enter( body ):
 	if body.get_name()=="player":
 		
-		body.set_moveSpeed(150)
+		body.set_moveSpeed(120)
 		anim.play("consume")
 		body.start_timer()
 		queue_free()
