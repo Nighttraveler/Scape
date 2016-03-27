@@ -13,6 +13,7 @@ var global
 var time= 200
 var acumm=0 
 onready var anim_player= get_node("AnimationPlayer")
+onready var sprite= get_node("AnimatedSprite")
 var anim=""
 var next_anim=""
 var speed
@@ -41,7 +42,8 @@ func _fixed_process(delta):
 	teleport()
 	jump()
 	if get_linear_velocity().y>0:
-		get_node("JetPack").hide()		
+		get_node("JetPack").hide()
+		can_die=true		
 	
 	if anim!=next_anim:
 		anim=next_anim
@@ -97,17 +99,19 @@ func get_Player_acceleration():
 	
 func start_timer():	
 	get_node("back_to_normal_speed").start()
-	
+
+func modulate_speed_down():
+	sprite.set_modulate(Color("1463ed"))
+func modulate_speed_up():
+	sprite.set_modulate(Color("fff500"))	
 func _on_back_to_normal_speed_timeout():
 	set_moveSpeed(speed)
-	
+	sprite.set_modulate(Color("ffffff"))
 	pass # replace with function body
 
 func jetpack():
-	can_die=false
- 
-	set_axis_velocity(Vector2(0, -2000))
-	 
+	can_die=false 
+	set_axis_velocity(Vector2(0, -2000))	 
 	get_node("JetPack").show()
 	
 	pass

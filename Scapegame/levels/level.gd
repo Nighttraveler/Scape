@@ -125,19 +125,17 @@ func generate_random_p():
 		var p=plataform.instance()		
 		random_objects(item_probal,p)
 		
-		if plataforms.get_child_count()==0:
-			break
-		else:
-			var lp= plataforms.get_child(plataforms.get_child_count()-1)
-			for i in lp.get_children():
-				if i.get_name()=="spring":
-					plat_sp=true		
+
+		var lp= plataforms.get_child(plataforms.get_child_count()-1)
+		for i in lp.get_children():
+			if i.get_name()=="spring":
+				plat_sp=true		
 		
 		if !plat_sp:
 			ypos-=165
 			generate_fly_enemy=true		
 		else:						
-			ypos-=620
+			ypos-=200
 			plat_sp=false
 			generate_fly_enemy=false
 		plataforms.add_child(p)
