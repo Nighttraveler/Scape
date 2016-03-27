@@ -9,7 +9,7 @@ onready var anim= get_node("AnimationPlayer")
 func _ready():
 	# Initialization here
 	
-	anim.play("rot")
+	 
 	pass
 
 

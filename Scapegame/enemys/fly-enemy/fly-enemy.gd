@@ -60,6 +60,6 @@ func move_towards(target,delta):
 
 
 func _on_Area2D_body_enter( body ):
-	if body.get_name()== "player":
+	if body.get_name()== "player" && body.can_die==true:
 		get_node("/root/world").lose()
 	pass # replace with function body

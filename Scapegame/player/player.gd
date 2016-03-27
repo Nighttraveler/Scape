@@ -1,4 +1,3 @@
-
 extends RigidBody2D
 
 export var Jump_heigth= 650
@@ -7,11 +6,12 @@ export var Player_acceleration= 5 setget set_Player_acceleration,get_Player_acce
 
 var feet= null
 var feet2=null
- 
+var can_die=true
 var current_pos= 0
 var act_linear_velocity
 var global
- 
+var time= 200
+var acumm=0 
 onready var anim_player= get_node("AnimationPlayer")
 var anim=""
 var next_anim=""
@@ -26,23 +26,22 @@ func _ready():
 	set_fixed_process(true)
 	global=get_node("/root/Global")
 	speed= get_moveSpeed()
+	get_node("JetPack").hide()
 	
 	set_contact_monitor(true)
-	set_max_contacts_reported(1)
-
-	 
+	set_max_contacts_reported(1) 
 	 
 	pass
 
-
+var del
 func _fixed_process(delta): 
 	act_linear_velocity = get_linear_velocity().y
-	 
+	del=delta
 	moving(delta) 
 	teleport()
 	jump()
-	 
- 
+	if get_linear_velocity().y>0:
+		get_node("JetPack").hide()		
 	
 	if anim!=next_anim:
 		anim=next_anim
@@ -50,10 +49,11 @@ func _fixed_process(delta):
 	
 	 
 func jump():	
-	if  act_linear_velocity==0 &&( feet.is_colliding() or feet2.is_colliding() ):
+	if  act_linear_velocity==0 &&( feet.is_colliding() or feet2.is_colliding()):
 		set_linear_velocity(Vector2(0,-Jump_heigth))
 		next_anim="jump"	 
 	pass
+	
 
 func teleport():
 	if get_pos().x<0:
@@ -95,11 +95,20 @@ func set_Player_acceleration(accel):
 func get_Player_acceleration():
 	return Player_acceleration
 	
-func start_timer():
-	print("iniciado")
+func start_timer():	
 	get_node("back_to_normal_speed").start()
-	print(get_moveSpeed())
+	
 func _on_back_to_normal_speed_timeout():
 	set_moveSpeed(speed)
-	print(get_moveSpeed())
+	
 	pass # replace with function body
+
+func jetpack():
+	can_die=false
+ 
+	set_axis_velocity(Vector2(0, -2000))
+	 
+	get_node("JetPack").show()
+	
+	pass
+ 

@@ -13,7 +13,7 @@ func _ready():
 	 
 	
 	#GET THE HIGH SCORE FROM THE FILE	
-	high_score_label.set_text("HighScore "+str(Global.get_saved_highscore()) )
+	high_score_label.set_text("High Score "+str(Global.get_saved_highscore()) )
 	coins.set_text("Coins "+ str(Global.get_saved_coins_cant()))
 	pass
 

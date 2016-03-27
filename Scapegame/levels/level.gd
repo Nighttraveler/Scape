@@ -14,6 +14,7 @@ var grass1= ResourceLoader.load("res://gameObjects/grass1.scn")
 var grass2= ResourceLoader.load("res://gameObjects/grass2.scn")
 var cactus= ResourceLoader.load("res://gameObjects/cactus.scn")
 var speedUp= ResourceLoader.load("res://gameObjects/speedUp.scn")
+var jetpackitem= ResourceLoader.load("res://gameObjects/jetpackitem.scn")
 var speedDown= ResourceLoader.load("res://gameObjects/speedDown.scn")
 var coin =  ResourceLoader.load("res://gameObjects/coin.scn")
 
@@ -22,7 +23,7 @@ var cantidad_plataformas=0
 var first=true
 var generate_fly_enemy
 var last_plataform_ypos
-var ypos=-170
+var ypos=-160
 var plat_sp
 var puntaje=0
 var add_miscs= true 
@@ -58,10 +59,11 @@ func _fixed_process(delta):
 		
 		player.set_pos(Vector2(player.get_pos().x,player.get_pos().y+downpos))
 		
-	print(player.Move_speed)
+	
 	
 	puntaje= scoreaux+int(abs(player.get_pos().y))
-	Global.set_score(puntaje)
+	if puntaje>Global.get_score():
+		Global.set_score(puntaje)
 	 
 	 
 	
@@ -71,6 +73,7 @@ func _fixed_process(delta):
 
 func random_objects(probal,p):
 	if (add_miscs):	
+		#AGREGO PASTOS Y CACTUS
 		if probal<=4:
 			var c= cactus.instance()
 			p.add_child(c)
@@ -85,8 +88,8 @@ func random_objects(probal,p):
 			var g= grass2.instance()
 			p.add_child(g)
 			g.set_pos(Vector2(  (rand_range(-150,150)), -76 ))
-			
-	if probal<=6: 
+	#AGREGO MONEDAS, SPRINGS, SPEEDUP, SPEEDDOWN, JETPACK		
+	if probal<=4: 
 		var c= coin.instance()
 		p.add_child(c)
 		c.set_pos( Vector2(rand_range(-500,500),rand_range(-100,-500)))
@@ -106,6 +109,11 @@ func random_objects(probal,p):
 		var speedItem= speedDown.instance()
 		p.add_child(speedItem)
 		speedItem.set_pos(Vector2(  rand_range(-200,200),rand_range(-400,400)))
+	
+	if probal>=9.5:
+		var jetpack= jetpackitem.instance()
+		p.add_child(jetpack)
+		jetpack.set_pos(Vector2(  rand_range(-200,200),rand_range(-400,400)))
 		
 	pass
 
@@ -172,13 +180,13 @@ func delete_p():
 # LOSEPOINT FUNCTIONS
 func losepoint_set_pos(pos):
 	if player.get_linear_velocity().y<=0:
-		losepoint.set_pos(Vector2(200,pos+600))  
+		losepoint.set_pos(Vector2(200,pos+300))  
 	pass
 func lose():
 	get_node("Ui/PopupPanel").show()
 	get_node("Ui/PopupPanel/lose_label").show()
 	get_node("Ui/PopupPanel/On_pause").hide()
-	 
+	get_node("Ui/PopupPanel/On_pause").hide()
 	player.set_axis_velocity(Vector2(0,-800))
 	player.anim_player.play("lose")
 	Globals.set("died",true)
