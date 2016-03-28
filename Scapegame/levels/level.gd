@@ -60,7 +60,7 @@ func _fixed_process(delta):
 		player.set_pos(Vector2(player.get_pos().x,player.get_pos().y+downpos))
 		
 	
-	
+	delete_p()
 	puntaje= scoreaux+int(abs(player.get_pos().y))
 	if puntaje>Global.get_score():
 		Global.set_score(puntaje)
@@ -89,7 +89,7 @@ func random_objects(probal,p):
 			p.add_child(g)
 			g.set_pos(Vector2(  (rand_range(-150,150)), -76 ))
 	#AGREGO MONEDAS, SPRINGS, SPEEDUP, SPEEDDOWN, JETPACK		
-	if probal<=4: 
+	if probal<=3: 
 		var c= coin.instance()
 		p.add_child(c)
 		c.set_pos( Vector2(rand_range(-500,500),rand_range(-100,-500)))
@@ -105,12 +105,12 @@ func random_objects(probal,p):
 		p.add_child(speedItem)
 		speedItem.set_pos(Vector2(  rand_range(-200,200),rand_range(-400,400) ))
 		
-	if probal>=9:
+	if probal>=19:
 		var speedItem= speedDown.instance()
 		p.add_child(speedItem)
 		speedItem.set_pos(Vector2(  rand_range(-200,200),rand_range(-400,400)))
 	
-	if probal>=9.5:
+	if probal>=19.5:
 		var jetpack= jetpackitem.instance()
 		p.add_child(jetpack)
 		jetpack.set_pos(Vector2(  rand_range(-200,200),rand_range(-400,400)))
@@ -119,9 +119,9 @@ func random_objects(probal,p):
 
 func generate_random_p():
 	var plataform= load("res://gameObjects/plataforms/"+p_load+".scn")
-	while (cantidad_plataformas<10):
+	while (cantidad_plataformas<20):
 		  
-		var item_probal= rand_range(0,10)			 
+		var item_probal= rand_range(0,20)			 
 		var p=plataform.instance()		
 		random_objects(item_probal,p)
 		
@@ -131,28 +131,28 @@ func generate_random_p():
 			if i.get_name()=="spring":
 				plat_sp=true		
 		
-		if !plat_sp:
-			ypos-=165
-			generate_fly_enemy=true		
-		else:						
-			ypos-=200
+		if !plat_sp:			
+			generate_fly_enemy=true
+					
+		else:			 
 			plat_sp=false
 			generate_fly_enemy=false
+			
+		ypos-=165
+		
 		plataforms.add_child(p)
 		p.set_pos(Vector2(rand_range(50,350),ypos))
-
-				
-
 		last_plataform_ypos=p.get_pos().y
 		cantidad_plataformas+=1
 		 
 			 
 	if generate_fly_enemy:
 		var f= fly_enemy.instance()	
-		f.set_global_pos(Vector2(randf(20,380),last_plataform_ypos+52))
+		f.set_global_pos(Vector2( 20,last_plataform_ypos+52))
 		f.set_target(Vector2(400,f.get_pos().y))
 		f.set_scale(Vector2(0.5,0.5))
 		plataforms.add_child(f)
+		
 	 
 	pass
 	
@@ -180,6 +180,7 @@ func losepoint_set_pos(pos):
 	if player.get_linear_velocity().y<=0:
 		losepoint.set_pos(Vector2(200,pos+300))  
 	pass
+	
 func lose():
 	get_node("Ui/PopupPanel").show()
 	get_node("Ui/PopupPanel/lose_label").show()
@@ -197,9 +198,7 @@ func _on_losepoint_body_enter( body ):
 
 # TIMERS FUNCTIONS
 
-func _on_Timer_delete_p_timeout():
-	delete_p()	 
-	pass # replace with function body
+ 
 	
 func _on_Timer_timeout():
 	get_tree().set_pause(true)
