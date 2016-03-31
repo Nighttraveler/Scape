@@ -20,8 +20,7 @@ func get_target():
 	return target
 
 func _fixed_process(delta):
-	
-	
+		
 	if is_moving_to_target:
 		move_towards(target,delta)	
 			

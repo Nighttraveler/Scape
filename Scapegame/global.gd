@@ -51,11 +51,12 @@ func get_saved_highscore():
 	var s= savegame.get_var()
 	savegame.close()
 	return s["highscore"]
+	print(s["highscore"])
 	pass
 	
 func save_dic_data():
 	save_data["coins"]= get_saved_coins_cant()+coins
-	if get_saved_highscore()<get_score():
+	if get_saved_highscore()<=get_score():
 		save_data["highscore"]= score
 	savegame.open(save_path,File.WRITE)
 	savegame.store_var(save_data)

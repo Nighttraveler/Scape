@@ -103,7 +103,9 @@ func start_timer():
 func modulate_speed_down():
 	sprite.set_modulate(Color("1463ed"))
 func modulate_speed_up():
-	sprite.set_modulate(Color("fff500"))	
+	sprite.set_modulate(Color("e1f30d"))
+	
+			
 func _on_back_to_normal_speed_timeout():
 	set_moveSpeed(speed)
 	sprite.set_modulate(Color("ffffff"))

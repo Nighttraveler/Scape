@@ -9,13 +9,16 @@ onready var timer_for_lose=  get_node("timers/Timer_for_lose")
 
 
 var fly_enemy= load("res://enemys/fly-enemy/fly-enemy.scn")
-var spring= ResourceLoader.load("res://gameObjects/spring.scn")
+#Decoracion
 var grass1= ResourceLoader.load("res://gameObjects/grass1.scn")
 var grass2= ResourceLoader.load("res://gameObjects/grass2.scn")
 var cactus= ResourceLoader.load("res://gameObjects/cactus.scn")
+#Level Objects
+var spring= ResourceLoader.load("res://gameObjects/spring.scn")
 var speedUp= ResourceLoader.load("res://gameObjects/speedUp.scn")
 var jetpackitem= ResourceLoader.load("res://gameObjects/jetpackitem.scn")
 var speedDown= ResourceLoader.load("res://gameObjects/speedDown.scn")
+
 var coin =  ResourceLoader.load("res://gameObjects/coin.scn")
 
 var p_load
@@ -38,9 +41,7 @@ func _ready():
 	generate_fly_enemy= false
 	plat_sp=false	
 	set_fixed_process(true)		
-	pass
-	
-	
+	pass	
 
 func _fixed_process(delta):
 	 
@@ -63,10 +64,7 @@ func _fixed_process(delta):
 	delete_p()
 	puntaje= scoreaux+int(abs(player.get_pos().y))
 	if puntaje>Global.get_score():
-		Global.set_score(puntaje)
-	 
-	 
-	
+		Global.set_score(puntaje)	
 	pass
 
 
@@ -110,7 +108,7 @@ func random_objects(probal,p):
 		p.add_child(speedItem)
 		speedItem.set_pos(Vector2(  rand_range(-200,200),rand_range(-400,400)))
 	
-	if probal>=19.5:
+	if probal>=19.5 && Global.get_score()>=10000:
 		var jetpack= jetpackitem.instance()
 		p.add_child(jetpack)
 		jetpack.set_pos(Vector2(  rand_range(-200,200),rand_range(-400,400)))
@@ -151,8 +149,7 @@ func generate_random_p():
 		f.set_global_pos(Vector2( 20,last_plataform_ypos+52))
 		f.set_target(Vector2(400,f.get_pos().y))
 		f.set_scale(Vector2(0.5,0.5))
-		plataforms.add_child(f)
-		
+		plataforms.add_child(f)		
 	 
 	pass
 	
@@ -184,8 +181,10 @@ func losepoint_set_pos(pos):
 func lose():
 	get_node("Ui/PopupPanel").show()
 	get_node("Ui/PopupPanel/lose_label").show()
+	
 	get_node("Ui/PopupPanel/On_pause").hide()
 	get_node("Ui/PopupPanel/On_pause").hide()
+	
 	player.set_axis_velocity(Vector2(0,-800))
 	player.anim_player.play("lose")
 	Globals.set("died",true)
@@ -196,9 +195,7 @@ func _on_losepoint_body_enter( body ):
 		lose()		
 	pass # replace with function body
 
-# TIMERS FUNCTIONS
-
- 
+# TIMERS FUNCTIONS 
 	
 func _on_Timer_timeout():
 	get_tree().set_pause(true)
@@ -216,22 +213,20 @@ func _on_Change_plataforms_to__wood_timeout():
 func _on_Change_plataforms_to__cake_timeout():
 	p_load="plataforms_cake"
 	pass # replace with function body
+	
+	
 #BUTTON FUCTIONS
 
 func _on_replay_pressed():
-	Global.save_dic_data()
-	
-	
+	Global.save_dic_data()	
 	Global.reset_coins()	 
-	Global.reset_score()
-	
+	Global.reset_score()	
 	Global.goto_scene("res://levels/level01.scn")
 	get_tree().set_pause(false)
 	pass # replace with function body
 	
 	
-func _on_Button_pressed():
-		
+func _on_Button_pressed():		
 	Global.save_dic_data()
 	Global.reset_score()
 	Global.reset_coins()	
@@ -251,9 +246,4 @@ func _on_pauseButton_pressed():
 			get_node("Ui/PopupPanel").hide()
 			get_tree().set_pause(false)
 			pause=false
-	pass # replace with function body
-
-
-func _on_back_pressed():
-
 	pass # replace with function body

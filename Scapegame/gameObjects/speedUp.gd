@@ -1,5 +1,5 @@
 
-extends Sprite
+extends Light2D
 
 # member variables here, example:
 # var a=2
